@@ -9,5 +9,3 @@ class rvm::install inherits rvm {
     #refreshonly => true,
   }
 }
-
-include rvm::install
