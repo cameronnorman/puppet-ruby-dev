@@ -44,5 +44,6 @@
 #
 class rvm {
   $username = "cam"
+  include rvm::ssh_keygen
   include rvm::install
 }
