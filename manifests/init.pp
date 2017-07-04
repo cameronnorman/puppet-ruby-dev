@@ -47,3 +47,5 @@ class rvm {
   include rvm::ssh_keygen
   include rvm::install
 }
+
+include rvm
