@@ -1,0 +1,15 @@
+{
+  "name": "cam-rvm",
+  "version": "0.0.1",
+  "author": "cam",
+  "summary": "Installs RVM on ubuntu",
+  "license": "None",
+  "source": "",
+  "project_page": null,
+  "issues_url": null,
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ],
+  "data_provider": null
+}
+
