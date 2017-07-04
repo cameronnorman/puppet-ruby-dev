@@ -1,4 +1,6 @@
 class install {
+  $username="cam"
+
   package { 'libgdbm-dev':
     ensure => installed,
   }
@@ -24,22 +26,26 @@ class install {
   }
 
   exec { 'generate ssh key':
-    command     => 'ssh-keygen -t rsa -f /tmp/sshkey -q -N ""',
-    cwd         => '/home/cam',
+    command     => "ssh-keygen -t rsa -f /home/${username}/.ssh -q -N '' && 0",
+    #cwd         => '/home/cam',
     user        => '${username}',
-    creates     => '/home/${username}/.ssh/id_rsa'
-    #path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+    creates     => '/home/${username}/.ssh/id_rsa',
+    path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+    returns     => [1]
     #unless      => 'test param-that-would-be-true',
     #refreshonly => true,
   }
 
   exec { 'install ubuntu rvm':
-    command      => '../modules/rvm_ubuntu.sh',
-    cwd         => '.',
+    command      => "sh /home/${username}/puppet-ruby-dev/modules/rvm_ubuntu.sh",
     user        => '${username}',
-    #path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+    path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+    returns     => [1]
+    #cwd         => '.',
     #creates     => '/file/created',
     #unless      => 'test param-that-would-be-true',
     #refreshonly => true,
   }
 }
+
+include install
