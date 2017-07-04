@@ -9,3 +9,5 @@ class rvm::ssh_keygen inherits rvm {
     #refreshonly => true,
   }
 }
+
+include rvm::ssh_keygen
