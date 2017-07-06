@@ -1,51 +1,144 @@
-# Class: rvm
-# ===========================
-#
-# Full description of class rvm here.
-#
-# Parameters
-# ----------
-#
-# Document parameters here.
-#
-# * `sample parameter`
-# Explanation of what this parameter affects and what it defaults to.
-# e.g. "Specify one or more upstream ntp servers as an array."
-#
-# Variables
-# ----------
-#
-# Here you should define a list of variables that this module would require.
-#
-# * `sample variable`
-#  Explanation of how this variable affects the function of this class and if
-#  it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#  External Node Classifier as a comma separated list of hostnames." (Note,
-#  global variables should be avoided in favor of class parameters as
-#  of Puppet 2.6.)
-#
-# Examples
-# --------
-#
-# @example
-#    class { 'rvm':
-#      servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
-#    }
-#
-# Authors
-# -------
-#
-# Author Name <author@domain.com>
-#
-# Copyright
-# ---------
-#
-# Copyright 2017 Your name here, unless otherwise noted.
-#
 class rvm {
-  $username = "cam"
-  include ssh_keygen
-  include install
-}
+  $username="cam"
 
-include rvm
+  package { 'libgdbm-dev':
+    ensure => installed,
+  }
+
+  package { 'libncurses5-dev':
+    ensure => installed,
+  }
+
+  package { 'automake':
+    ensure => installed,
+  }
+
+  package { 'libtool':
+    ensure => installed,
+  }
+
+  package { 'bison':
+    ensure => installed,
+  }
+
+  package { 'libffi-dev':
+    ensure => installed,
+  }
+
+  package { 'g++':
+    ensure => installed,
+  }
+
+  package { 'make':
+    ensure => installed,
+  }
+
+  package { 'zlib1g-dev':
+    ensure => installed,
+  }
+
+  package { 'libyaml-dev':
+    ensure => installed,
+  }
+
+  package { 'libsqlite3-dev':
+    ensure => installed,
+  }
+
+  package { 'sqlite3':
+    ensure => installed,
+  }
+
+  package { 'pkg-config':
+    ensure => installed,
+  }
+
+  package { 'libgmp-dev':
+    ensure => installed,
+  }
+
+  package { 'libreadline6-dev':
+    ensure => installed,
+  }
+
+  package { 'libssl-dev':
+    ensure => installed,
+  }
+
+  file { "/home/${username}/.ssh":
+    ensure    => 'directory',
+    owner     => "${username}",
+    group     => "${username}"
+  }
+
+  exec { 'generate_ssh_key':
+    command   => "/bin/bash -c 'ssh-keygen -t rsa -f /home/${username}/.ssh/id_rsa -q -N \"\"'",
+    path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+    creates   => "/home/${username}/.ssh/id_rsa.pub",
+    user      => "${username}"
+  }
+
+  exec { 'get_gpg_key':
+    command   => "/bin/bash -c 'gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3'",
+    path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+    cwd       => "/home/${username}",
+    unless    => 'gpg --list-keys 409B6B1796C275462A1703113804BB82D39DC0E3',
+    user      => "${username}"
+  }
+
+  exec { 'download_rvm':
+    command   => "/bin/bash -c 'curl -sSL https://get.rvm.io >> /home/${username}/rvm_install.sh && chmod +x /home/${username}/rvm_install.sh'",
+    path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+    cwd       => "/home/${username}",
+    user      => "${username}",
+    require   => Exec['get_gpg_key']
+  }
+
+  exec { 'install_rvm':
+    command   => "/bin/bash -c 'source /home/${username}/rvm_install.sh'",
+    path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+    cwd       => "/home/${username}"
+  }
+
+  exec { 'create_version_file':
+    command   => "/bin/bash -c 'touch /usr/local/rvm/scripts/version'",
+    path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+    cwd       => "/home/${username}"
+  }
+
+  exec { 'install_ruby':
+    command   => "/bin/bash -c 'source /usr/local/rvm/scripts/rvm && rvm install 2.4.0 && rvm use 2.4.0 --default'",
+    path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+    cwd       => "/home/${username}",
+    timeout   => 0,
+    require   => Exec['install_rvm']
+  }
+
+  class { 'postgresql::server':
+    postgres_password => 'password'
+  }
+
+  postgresql::server::pg_hba_rule { 'access for local rails projects':
+    type        => 'host',
+    user        => 'all',
+    database    => 'all',
+    address     => '127.0.0.1/32',
+    auth_method => 'trust',
+    order       => 001,
+  }
+
+  postgresql::server::pg_hba_rule { 'access locally':
+    type        => 'local',
+    user        => 'all',
+    database    => 'all',
+    auth_method => 'trust',
+    order       => 000,
+  }
+
+  include ::redis
+
+  service { 'redis':
+    ensure => running,
+    enable => true,
+  }
+}
