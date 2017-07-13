@@ -162,11 +162,6 @@ class rvm {
     purge   => true
   }
 
-  Firewall {
-    before  => Class['fw::post'],
-    require => Class['my_fw::pre'],
-  }
-
   class { ['my_fw::pre']: }
 }
 
