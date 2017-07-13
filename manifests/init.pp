@@ -183,14 +183,14 @@ class my_fw::pre {
 
   firewall { "001 accept all http":
     chain    => 'INPUT',
-    proto    => 'http',
+    proto    => 'tcp',
     dport    => '80',
     action   => 'accept',
   }
 
   firewall { "003 accept all icmp":
     chain    => 'INPUT',
-    proto    => 'ssh',
+    proto    => 'tcp',
     action   => 'accept',
     dport    => '22'
   }
