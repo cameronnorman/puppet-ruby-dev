@@ -164,35 +164,35 @@ class rvm {
 
   Firewall {
     before  => Class['fw::post'],
-    require => Class['fw::pre'],
+    require => Class['my_fw::pre'],
   }
 
   class { ['my_fw::pre']: }
+}
 
-  class my_fw::pre {
-    Firewall {
-      require => undef,
-    }
+class my_fw::pre {
+  Firewall {
+    require => undef,
+  }
 
-    firewall { "000 accept all icmp":
-      chain    => 'INPUT',
-      proto    => 'icmp',
-      action   => 'accept',
-    }
+  firewall { "000 accept all icmp":
+    chain    => 'INPUT',
+    proto    => 'icmp',
+    action   => 'accept',
+  }
 
-    firewall { "001 accept all http":
-      chain    => 'INPUT',
-      proto    => 'http',
-      dport    => '80',
-      action   => 'accept',
-    }
+  firewall { "001 accept all http":
+    chain    => 'INPUT',
+    proto    => 'http',
+    dport    => '80',
+    action   => 'accept',
+  }
 
-    firewall { "003 accept all icmp":
-      chain    => 'INPUT',
-      proto    => 'ssh',
-      action   => 'accept',
-      dport    => '22'
-    }
+  firewall { "003 accept all icmp":
+    chain    => 'INPUT',
+    proto    => 'ssh',
+    action   => 'accept',
+    dport    => '22'
   }
 }
 
