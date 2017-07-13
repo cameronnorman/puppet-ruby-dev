@@ -154,7 +154,7 @@ class rvm {
     plugins => 'git github ruby rails'
   }
 
-  package { 'iptables-persistent'
+  package { 'iptables-persistent':
     ensure => 'present'
   }
 
@@ -183,7 +183,7 @@ class rvm {
     firewall { "001 accept all http":
       chain    => 'INPUT',
       proto    => 'http',
-      dport    => '80'
+      dport    => '80',
       action   => 'accept',
     }
 
@@ -195,3 +195,5 @@ class rvm {
     }
   }
 }
+
+include rvm
