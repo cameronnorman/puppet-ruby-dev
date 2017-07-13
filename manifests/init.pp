@@ -141,4 +141,57 @@ class rvm {
     ensure => running,
     enable => true,
   }
+
+  class { 'ohmyzsh': }
+
+  ohmyzsh::install { 'cam': }
+
+  ohmyzsh::theme { 'cam':
+    theme => 'robbyrussell'
+  }
+
+  ohmyzsh::plugins { 'cam':
+    plugins => 'git github ruby rails'
+  }
+
+  package { 'iptables-persistent'
+    ensure => 'present'
+  }
+
+  resources { "firewall":
+    purge   => true
+  }
+
+  Firewall {
+    before  => Class['fw::post'],
+    require => Class['fw::pre'],
+  }
+
+  class { ['my_fw::pre']: }
+
+  class my_fw::pre {
+    Firewall {
+      require => undef,
+    }
+
+    firewall { "000 accept all icmp":
+      chain    => 'INPUT',
+      proto    => 'icmp',
+      action   => 'accept',
+    }
+
+    firewall { "001 accept all http":
+      chain    => 'INPUT',
+      proto    => 'http',
+      dport    => '80'
+      action   => 'accept',
+    }
+
+    firewall { "003 accept all icmp":
+      chain    => 'INPUT',
+      proto    => 'ssh',
+      action   => 'accept',
+      dport    => '22'
+    }
+  }
 }
