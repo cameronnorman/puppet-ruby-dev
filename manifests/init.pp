@@ -154,13 +154,13 @@ class rvm {
 
   class { 'ohmyzsh': }
 
-  ohmyzsh::install { 'cam': }
+  ohmyzsh::install { '${username}': }
 
-  ohmyzsh::theme { 'cam':
+  ohmyzsh::theme { '${username}':
     theme => 'robbyrussell'
   }
 
-  ohmyzsh::plugins { 'cam':
+  ohmyzsh::plugins { '${username}':
     plugins => 'git github ruby rails'
   }
 }
