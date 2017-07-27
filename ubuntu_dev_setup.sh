@@ -7,7 +7,7 @@ sudo mkdir -p /etc/puppet/code/modules
 cd puppet-ruby-dev
 
 # Then this
-sudo librarian-puppet install --path /etc/puppet/code/modules
+librarian-puppet install --path /etc/puppet/code/modules
 
 # Then this
-sudo puppet apply manifests/init.pp --verbose
+puppet apply manifests/init.pp --verbose
