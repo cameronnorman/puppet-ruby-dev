@@ -114,9 +114,14 @@ class rvm {
     require   => Exec['install_rvm']
   }
 
-  class { 'postgresql::server':
-    postgres_password => 'password'
-  }
+  class { 'postgresql::server': }
+
+  # Can be used to create a database for your application
+
+  # postgresql::server::db { 'mydatabasename':
+  #   user     => 'mydatabaseuser',
+  #   password => postgresql_password('mydatabaseuser', 'mypassword'),
+  # }
 
   postgresql::server::pg_hba_rule { 'access for local rails projects':
     type        => 'host',
@@ -153,42 +158,41 @@ class rvm {
   ohmyzsh::plugins { 'cam':
     plugins => 'git github ruby rails'
   }
-
-  package { 'iptables-persistent':
-    ensure => 'present'
-  }
-
-  resources { "firewall":
-    purge   => true
-  }
-
-  class { ['my_fw::pre']: }
 }
+  # package { 'iptables-persistent':
+  #   ensure => 'present'
+  # }
 
-class my_fw::pre {
-  Firewall {
-    require => undef,
-  }
+  # resources { "firewall":
+  #   purge   => true
+  # }
 
-  firewall { "000 accept all icmp":
-    chain    => 'INPUT',
-    proto    => 'icmp',
-    action   => 'accept',
-  }
+  # class { ['my_fw::pre']: }
 
-  firewall { "001 accept all http":
-    chain    => 'INPUT',
-    proto    => 'tcp',
-    dport    => '80',
-    action   => 'accept',
-  }
+# class my_fw::pre {
+#   Firewall {
+#     require => undef,
+#   }
 
-  firewall { "003 accept all icmp":
-    chain    => 'INPUT',
-    proto    => 'tcp',
-    action   => 'accept',
-    dport    => '22'
-  }
-}
+#   firewall { "000 accept all icmp":
+#     chain    => 'INPUT',
+#     proto    => 'icmp',
+#     action   => 'accept',
+#   }
+
+#   firewall { "001 accept all http":
+#     chain    => 'INPUT',
+#     proto    => 'tcp',
+#     dport    => '80',
+#     action   => 'accept',
+#   }
+
+#   firewall { "003 accept all icmp":
+#     chain    => 'INPUT',
+#     proto    => 'tcp',
+#     action   => 'accept',
+#     dport    => '22'
+#   }
+# }
 
 include rvm
