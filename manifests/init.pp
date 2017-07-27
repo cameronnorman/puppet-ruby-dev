@@ -1,5 +1,5 @@
 class rvm {
-  $username="cam"
+  $username=$facts["id"]
 
   package { 'libgdbm-dev':
     ensure => installed,
