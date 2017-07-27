@@ -114,6 +114,11 @@ class rvm {
     require   => Exec['install_rvm']
   }
 
+  class { 'postgresql::globals':
+    manage_package_repo => true,
+    version             => '9.6',
+  }
+
   class { 'postgresql::server': }
 
   # Can be used to create a database for your application
