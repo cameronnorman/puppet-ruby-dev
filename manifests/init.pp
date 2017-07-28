@@ -1,4 +1,4 @@
-class rvm {
+class ruby_install {
   $username=$facts["id"]
 
   package { 'libgdbm-dev':
@@ -212,4 +212,4 @@ class rvm {
 #   }
 # }
 
-include rvm
+include ruby_install
