@@ -103,8 +103,7 @@ class rvm {
   exec { 'install_rvm':
     command   => "/bin/bash -c 'source /home/${username}/rvm_install.sh'",
     path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-    cwd       => "/home/${username}",
-    require   => Exec['create_version_file']
+    cwd       => "/home/${username}"
   }
 
   exec { 'create_version_file':
@@ -119,7 +118,7 @@ class rvm {
     path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
     cwd       => "/home/${username}",
     timeout   => 0,
-    require   => Exec['install_rvm']
+    require   => Exec['create_version_file']
   }
 
   class { 'postgresql::globals':
