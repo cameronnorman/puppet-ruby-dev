@@ -83,46 +83,48 @@ class rvm {
     require   => File["/home/${username}/.ssh"]
   }
 
-  exec { 'get_gpg_key':
-    command   => "/bin/bash -c 'gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3'",
-    path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-    cwd       => "/home/${username}",
-    unless    => 'gpg --list-keys 409B6B1796C275462A1703113804BB82D39DC0E3',
-    user      => "${username}",
-    require   => Exec['generate_ssh_key']
-  }
+  class { '::rvm': }
 
-  exec { 'download_rvm':
-    command   => "/bin/bash -c 'curl -sSL https://get.rvm.io | bash'",
-    path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-    cwd       => "/home/${username}",
-    user      => "${username}",
-    require   => Exec['get_gpg_key'],
-    returns   => [0,1]
-  }
+  # exec { 'get_gpg_key':
+  #   command   => "/bin/bash -c 'gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3'",
+  #   path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+  #   cwd       => "/home/${username}",
+  #   unless    => 'gpg --list-keys 409B6B1796C275462A1703113804BB82D39DC0E3',
+  #   user      => "${username}",
+  #   require   => Exec['generate_ssh_key']
+  # }
 
-  exec { 'install_rvm':
-    command   => "/bin/bash -c 'source /home/${username}/rvm_install.sh'",
-    path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-    cwd       => "/home/${username}",
-    returns   => [0,1],
-    require   => Exec['download_rvm']
-  }
+  # exec { 'download_rvm':
+  #   command   => "/bin/bash -c 'curl -sSL https://get.rvm.io | bash'",
+  #   path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+  #   cwd       => "/home/${username}",
+  #   user      => "${username}",
+  #   require   => Exec['get_gpg_key'],
+  #   returns   => [0,1]
+  # }
 
-  exec { 'create_version_file':
-    command   => "/bin/bash -c 'touch /home/${username}/rvm/scripts/version'",
-    path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-    cwd       => "/home/${username}",
-    require   => Exec['install_rvm']
-  }
+  # exec { 'install_rvm':
+  #   command   => "/bin/bash -c 'source /home/${username}/rvm_install.sh'",
+  #   path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+  #   cwd       => "/home/${username}",
+  #   returns   => [0,1],
+  #   require   => Exec['download_rvm']
+  # }
 
-  exec { 'install_ruby':
-    command   => "/bin/bash -c 'source /usr/local/rvm/scripts/rvm && rvm install 2.4.0 && rvm use 2.4.0 --default'",
-    path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-    cwd       => "/home/${username}",
-    timeout   => 0,
-    require   => Exec['create_version_file']
-  }
+  # exec { 'create_version_file':
+  #   command   => "/bin/bash -c 'touch /home/${username}/rvm/scripts/version'",
+  #   path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+  #   cwd       => "/home/${username}",
+  #   require   => Exec['install_rvm']
+  # }
+
+  # exec { 'install_ruby':
+  #   command   => "/bin/bash -c 'source /usr/local/rvm/scripts/rvm && rvm install 2.4.0 && rvm use 2.4.0 --default'",
+  #   path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+  #   cwd       => "/home/${username}",
+  #   timeout   => 0,
+  #   require   => Exec['create_version_file']
+  # }
 
   class { 'postgresql::globals':
     manage_package_repo => true,
