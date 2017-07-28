@@ -133,22 +133,22 @@ class rvm {
   #   password => postgresql_password('mydatabaseuser', 'mypassword'),
   # }
 
-  postgresql::server::pg_hba_rule { 'access for local rails projects':
-    type        => 'host',
-    user        => 'all',
-    database    => 'all',
-    address     => '127.0.0.1/32',
-    auth_method => 'trust',
-    order       => 001,
-  }
+  # postgresql::server::pg_hba_rule { 'access for local rails projects':
+  #   type        => 'host',
+  #   user        => 'all',
+  #   database    => 'all',
+  #   address     => '127.0.0.1/32',
+  #   auth_method => 'trust',
+  #   order       => 001,
+  # }
 
-  postgresql::server::pg_hba_rule { 'access locally':
-    type        => 'local',
-    user        => 'all',
-    database    => 'all',
-    auth_method => 'trust',
-    order       => 000,
-  }
+  # postgresql::server::pg_hba_rule { 'access locally':
+  #   type        => 'local',
+  #   user        => 'all',
+  #   database    => 'all',
+  #   auth_method => 'trust',
+  #   order       => 000,
+  # }
 
   include ::redis
 
