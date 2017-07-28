@@ -105,6 +105,7 @@ class rvm {
     command   => "/bin/bash -c 'source /home/${username}/rvm_install.sh'",
     path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
     cwd       => "/home/${username}",
+    returns   => [0,1],
     require   => Exec['download_rvm']
   }
 
