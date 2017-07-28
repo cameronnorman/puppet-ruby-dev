@@ -79,7 +79,8 @@ class rvm {
     command   => "/bin/bash -c 'ssh-keygen -t rsa -f /home/${username}/.ssh/id_rsa -q -N \"\"'",
     path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
     creates   => "/home/${username}/.ssh/id_rsa.pub",
-    user      => "${username}"
+    user      => "${username}",
+    require   => File["/home/${username}/.ssh"]
   }
 
   exec { 'get_gpg_key':
