@@ -97,7 +97,8 @@ class rvm {
     path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
     cwd       => "/home/${username}",
     user      => "${username}",
-    require   => Exec['get_gpg_key']
+    require   => Exec['get_gpg_key'],
+    returns   => [0,1]
   }
 
   exec { 'install_rvm':
