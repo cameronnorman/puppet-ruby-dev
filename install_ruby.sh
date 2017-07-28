@@ -24,3 +24,4 @@ read email
 # git config --global user.name $username
 
 # git config --global user.email $email
+curl https://raw.githubusercontent.com/cameronnorman/puppet-ruby-dev/master/install_postgres.sh >> install_postgres.sh && sh install_postgres.sh
