@@ -7,8 +7,8 @@ cd puppet-ruby-dev
 
 # Then this
 username=$(whoami)
-sudo chown -R $username /etc/puppet
-librarian-puppet install --path /etc/puppet/code/modules
+sudo chown -R $username:$username /etc/puppet
+sudo librarian-puppet install --path /etc/puppet/code/modules --verbose
 
 # Then this
-puppet apply manifests/init.pp --verbose
+sudo puppet apply manifests/init.pp --verbose

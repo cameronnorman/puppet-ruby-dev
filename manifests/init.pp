@@ -65,6 +65,10 @@ class rvm {
     ensure => installed,
   }
 
+  package { 'postgresql':
+    ensure => installed,
+  }
+
   file { "/home/${username}/.ssh":
     ensure    => 'directory',
     owner     => "${username}",
@@ -87,7 +91,7 @@ class rvm {
   }
 
   exec { 'download_rvm':
-    command   => "/bin/bash -c 'curl -sSL https://get.rvm.io >> /home/${username}/rvm_install.sh && chmod +x /home/${username}/rvm_install.sh'",
+    command   => "/bin/bash -c 'curl -sSL https://get.rvm.io | bash'",
     path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
     cwd       => "/home/${username}",
     user      => "${username}",
@@ -98,10 +102,11 @@ class rvm {
     command   => "/bin/bash -c 'source /home/${username}/rvm_install.sh'",
     path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
     cwd       => "/home/${username}"
+    require   => Exec['create_version_file']
   }
 
   exec { 'create_version_file':
-    command   => "/bin/bash -c 'touch /usr/local/rvm/scripts/version'",
+    command   => "/bin/bash -c 'touch /home/${username}/rvm/scripts/version'",
     path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
     cwd       => "/home/${username}"
   }
@@ -113,13 +118,6 @@ class rvm {
     timeout   => 0,
     require   => Exec['install_rvm']
   }
-
-  class { 'postgresql::globals':
-    manage_package_repo => true,
-    version             => '9.6',
-  }
-
-  class { 'postgresql::server': }
 
   # Can be used to create a database for your application
 
