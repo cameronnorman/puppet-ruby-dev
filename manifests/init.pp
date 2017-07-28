@@ -110,7 +110,8 @@ class rvm {
   exec { 'create_version_file':
     command   => "/bin/bash -c 'touch /home/${username}/rvm/scripts/version'",
     path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-    cwd       => "/home/${username}"
+    cwd       => "/home/${username}",
+    require   => Exec['install_rvm']
   }
 
   exec { 'install_ruby':
