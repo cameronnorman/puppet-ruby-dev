@@ -87,7 +87,8 @@ class rvm {
     path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
     cwd       => "/home/${username}",
     unless    => 'gpg --list-keys 409B6B1796C275462A1703113804BB82D39DC0E3',
-    user      => "${username}"
+    user      => "${username}",
+    require   => Exec['generate_ssh_key']
   }
 
   exec { 'download_rvm':
