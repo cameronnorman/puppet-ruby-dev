@@ -65,10 +65,6 @@ class ruby_install {
     ensure => installed,
   }
 
-  package { 'postgresql':
-    ensure => installed,
-  }
-
   file { "/home/${username}/.ssh":
     ensure    => 'directory',
     owner     => "${username}",
@@ -83,55 +79,17 @@ class ruby_install {
     require   => File["/home/${username}/.ssh"]
   }
 
-  class { '::rvm': }
-
-  # exec { 'get_gpg_key':
-  #   command   => "/bin/bash -c 'gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3'",
-  #   path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-  #   cwd       => "/home/${username}",
-  #   unless    => 'gpg --list-keys 409B6B1796C275462A1703113804BB82D39DC0E3',
-  #   user      => "${username}",
-  #   require   => Exec['generate_ssh_key']
-  # }
-
-  # exec { 'download_rvm':
-  #   command   => "/bin/bash -c 'curl -sSL https://get.rvm.io | bash'",
-  #   path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-  #   cwd       => "/home/${username}",
-  #   user      => "${username}",
-  #   require   => Exec['get_gpg_key'],
-  #   returns   => [0,1]
-  # }
-
-  # exec { 'install_rvm':
-  #   command   => "/bin/bash -c 'source /home/${username}/rvm_install.sh'",
-  #   path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-  #   cwd       => "/home/${username}",
-  #   returns   => [0,1],
-  #   require   => Exec['download_rvm']
-  # }
-
-  # exec { 'create_version_file':
-  #   command   => "/bin/bash -c 'touch /home/${username}/rvm/scripts/version'",
-  #   path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-  #   cwd       => "/home/${username}",
-  #   require   => Exec['install_rvm']
-  # }
-
-  # exec { 'install_ruby':
-  #   command   => "/bin/bash -c 'source /usr/local/rvm/scripts/rvm && rvm install 2.4.0 && rvm use 2.4.0 --default'",
-  #   path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-  #   cwd       => "/home/${username}",
-  #   timeout   => 0,
-  #   require   => Exec['create_version_file']
-  # }
+  rvm::ruby { "dev_ruby":
+    user => $username,
+    version => "ruby-2.4.0"
+  }
 
   class { 'postgresql::globals':
     manage_package_repo => true,
     version             => '9.6',
   }
 
-  class { 'postgresql::server': }
+  # class { 'postgresql::server': }
 
   # Can be used to create a database for your application
 
@@ -157,24 +115,24 @@ class ruby_install {
   #   order       => 000,
   # }
 
-  include ::redis
+  # include ::redis
 
-  service { 'redis':
-    ensure => running,
-    enable => true,
-  }
+  # service { 'redis':
+  #   ensure => running,
+  #   enable => true,
+  # }
 
-  class { 'ohmyzsh': }
+  # class { 'ohmyzsh': }
 
-  ohmyzsh::install { "${username}": }
+  # ohmyzsh::install { "${username}": }
 
-  ohmyzsh::theme { "${username}":
-    theme => 'robbyrussell'
-  }
+  # ohmyzsh::theme { "${username}":
+  #   theme => 'robbyrussell'
+  # }
 
-  ohmyzsh::plugins { "${username}":
-    plugins => 'git github ruby rails'
-  }
+  # ohmyzsh::plugins { "${username}":
+  #   plugins => 'git github ruby rails'
+  # }
 }
   # package { 'iptables-persistent':
   #   ensure => 'present'

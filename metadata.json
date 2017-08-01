@@ -12,7 +12,8 @@
     {"name":"puppetlabs-firewall","version_requirement":">= 1.9.0"},
     {"name":"puppetlabs-postgresql","version_requirement":">= 5.0.0"},
     {"name":"arioch-redis","version_requirement":">= 3.1.0"},
-    {"name":"acme-ohmyzsh","version_requirement":">= 0.1.2"}
+    {"name":"acme-ohmyzsh","version_requirement":">= 0.1.2"},
+    {"name":"DracoBlue-rvm","version_requirement":">= 0.3.0"}
   ],
   "data_provider": null
 }
